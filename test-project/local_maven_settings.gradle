@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        mavenLocal {
+            content {
+                includeGroup 'org.javamodularity.moduleplugin' // by 'publishToMavenLocal' task
+                includeGroup 'org.javamodularity' // by 'publishToMavenLocal' task
+            }
+        }
+        mavenCentral {
+            content {
+                includeGroup 'com.github.javaparser'
+                includeGroup 'org.jooq'
+            }
+        }
+    }
+}
+
+apply from: 'settings.gradle'

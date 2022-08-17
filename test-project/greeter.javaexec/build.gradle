@@ -1,0 +1,29 @@
+import org.gradle.util.GradleVersion
+import org.javamodularity.moduleplugin.tasks.ModularJavaExec
+
+dependencies {
+    implementation project(':greeter.api')
+    runtimeOnly project(':greeter.provider')
+}
+
+patchModules.config = [
+        'java.annotation=jsr305-3.0.2.jar'
+]
+modularity {
+    patchModule('java.annotation', 'jsr250-api-1.0.jar')
+}
+
+new File("$projectDir/src/main/java/demo").eachFileMatch(~/Demo.*\.java/) { file ->
+    def demoClassName = file.name - '.java'
+    task "run$demoClassName"(type: ModularJavaExec) {
+        group = 'Demo'
+        description = "Run the $demoClassName program"
+        if(GradleVersion.current().compareTo(GradleVersion.version("6.4")) < 0) {
+            main = "greeter.javaexec/demo.$demoClassName"
+        } else {
+            mainClass = "demo.$demoClassName"
+            mainModule = 'greeter.javaexec'
+        }
+        jvmArgs = ['-Dgreeter.sender=gradle-modules-plugin']
+    }
+}
