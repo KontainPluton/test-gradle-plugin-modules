@@ -10,31 +10,15 @@ Il n'y a pas tout les tests que j'ai pu faire car j'en ai supprimé certains, ma
 
 Premier post que j'ai fait :
 https://discuss.gradle.org/t/java-modules-jpms-compile-all-modules-at-once/43548
-Je n'ai pas réussi à faire marcher la technique proposée.
-Cette première solution serait de faire une alternative à la commande :
-`javac -d mods --module-source-path "./*/src/main/java/" $(find -name "*.java")
-` en modifiant la tache JavaCompile en ajoutant des arguments.
-```
-tasks.withType<JavaCompile> {
-    val compilerArgs = options.compilerArgs
-    compilerArgs.add("--module-path,classpath.asPath")
-    classpath = files()
-}
-```
+Je n'ai pas réussi à faire marcher la technique proposée de manière à la faire marcher directement avec SIS.
 
-```
-tasks.compileJava {
-    options.compilerArgs.add("-d")
-    options.compilerArgs.add("mods")
-    options.compilerArgs.add("--module-source-path")
-    options.compilerArgs.add("\"../*/src/main/java/\"")
-[...]
-```
+J'ai créé plusieurs repositories github avec plusiereurs tests de projet, en voici les liens :
 
+- Ce premier repo était un test sur le multi module, avec la structure que l'on trouve dans sis. Mais impossible à faire fonctionner. (les couches internes de gradle "nettoient" les lignes de commandes (même passées au travers d'un plugin custom). Ce qui fait que le passage des sources des modules est erronée et fait des erreurs.
+https://github.com/KontainPluton/test-gradle-java-modules
 
-Je suis donc parti sur un plugin permettant de faire ce que l'on veut.
-https://discuss.gradle.org/t/java-modules-jpms-compile-all-modules-gradle-plugin/56345
-Sur ce dernier post personne ne m'a répondu.
+- Ce dernier fonctionne, j'arrive à compiler du multi module. Le problème c'est qu'il faut garder l'arborescence telle quelle src/main/java/[module1...module2...etc]. Donc il faudrait revoir comment est structuré tout sis.
+ https://github.com/KontainPluton/gradle-modules-working 
 
 --------------------
 
